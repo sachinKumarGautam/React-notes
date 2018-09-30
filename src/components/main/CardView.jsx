@@ -7,8 +7,14 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
 import Button from '@material-ui/core/Button'
 
+import CardViewForm from './CardViewForm'
+
 function Transition (props) {
   return <Slide direction='up' {...props} />
+}
+
+addCardToList = () => {
+  this.props.closeCardView()
 }
 
 class CardView extends React.Component {
@@ -29,12 +35,13 @@ class CardView extends React.Component {
           <DialogContentText id='alert-dialog-slide-description'>
             Add new content
           </DialogContentText>
+          <CardViewForm />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.closeCardView} color='primary'>
             Cancel
           </Button>
-          <Button onClick={this.props.closeCardView} color='primary'>
+          <Button onClick={this.addCardToList} color='primary'>
             Ok
           </Button>
         </DialogActions>
