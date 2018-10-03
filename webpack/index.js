@@ -3,7 +3,7 @@ const vendor = require('./vendor')
 const rules = require('./rules')
 const plugins = require('./plugins')
 const devServer = require('./dev_server')
-// const devtool = require('./devtool')
+const devtool = require('./devtool')
 const settings = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.css', '.scss']
@@ -47,7 +47,7 @@ const settings = {
     }
   },
   plugins,
-  devServer
-  // devtool
+  devServer,
+  devtool
 }
 module.exports = settings

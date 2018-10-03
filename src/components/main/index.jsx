@@ -52,7 +52,6 @@ class Main extends React.Component {
 
   render () {
     const { classes } = this.props
-    console.log(this.closeCardView)
     return (
       <div>
         <Grid container spacing={16}>
