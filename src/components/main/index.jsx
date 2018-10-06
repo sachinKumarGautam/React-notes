@@ -1,6 +1,8 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+
 import { withStyles } from '@material-ui/core/styles'
 import SideBar from './SideBar'
 import CardView from './CardView'
@@ -22,6 +24,9 @@ const styles = theme => ({
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
+  },
+  noCardYet: {
+    marginTop: theme.spacing.unit * 3
   }
 })
 
@@ -30,23 +35,77 @@ class Main extends React.Component {
     super(props)
     this.state = {
       open: false,
-      cardList: [
-        { sjskjs: 'sklsskl' },
-        { sjskjs: 'sklsskl' },
-        { sjskjs: 'sklsskl' }
-      ]
+      isEdit: false,
+      cardList: [],
+      progressCardItem: {},
+      inProgressIndex: null
     }
   }
 
   openCardView = () => {
     this.setState({
-      open: true
+      open: true,
+      progressCardItem: {},
+      inProgressIndex: null,
+      isEdit: false
     })
   }
 
   closeCardView = () => {
     this.setState({
       open: false
+    })
+  }
+
+  addCard = data => {
+    console.log(data, this)
+    const newCard = {
+      card_title: data.card_title,
+      card_description: data.card_description,
+      date_added: data.date_added
+    }
+    this.setState(prevState => ({
+      cardList: [...prevState.cardList, newCard]
+    }))
+  }
+
+  updateCard = value => {
+    const cardList = this.state.cardList
+    const inProgressIndex = this.state.inProgressIndex
+    const updatedCardList = cardList.map((item, index) => {
+      if (index !== inProgressIndex) {
+        return item
+      } else {
+        return {
+          ...item,
+          card_title: value.card_title,
+          card_description: value.card_description
+        }
+      }
+    })
+    this.setState({
+      cardList: updatedCardList
+    })
+  }
+
+  deleteCard = (index, event) => {
+    event.stopPropagation()
+    console.log(event)
+    let updatedCardList = []
+    const cardList = this.state.cardList
+    updatedCardList = cardList.slice()
+    updatedCardList.splice(index, 1)
+    this.setState({
+      cardList: updatedCardList
+    })
+  }
+
+  editCard = (cardItem, index) => {
+    this.setState({
+      open: true,
+      isEdit: true,
+      progressCardItem: cardItem,
+      inProgressIndex: index
     })
   }
 
@@ -65,13 +124,26 @@ class Main extends React.Component {
           </Grid>
           <Grid item xs={11}>
             <Paper elevation={1} className={classes.paper}>
-              {!this.state.cardList &&
-                <div>You have not added any card yet!</div>}
-              <CardList cardList={this.state.cardList} />
+              {!this.state.cardList.length &&
+                <Typography variant={'display1'} className={classes.noCardYet}>
+                  You have not added any card yet!
+                </Typography>}
+              <CardList
+                cardList={this.state.cardList}
+                deleteCard={this.deleteCard}
+                editCard={this.editCard}
+              />
             </Paper>
           </Grid>
         </Grid>
-        <CardView open={this.state.open} closeCardView={this.closeCardView} />
+        <CardView
+          addCard={this.addCard}
+          open={this.state.open}
+          closeCardView={this.closeCardView}
+          isEdit={this.state.isEdit}
+          updateCard={this.updateCard}
+          progressCardItem={this.state.progressCardItem}
+        />
       </div>
     )
   }

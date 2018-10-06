@@ -19,6 +19,20 @@ const theme = createMuiTheme({
       dark: '#800080'
     }
   },
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: ['Lato', 'sans-serif'],
+    fontSize: 16,
+    fontWeightBold: 600,
+    body3: {
+      fontSize: '0.75rem',
+      fontFamily: ['Lato', 'sans-serif']
+    },
+    body4: {
+      fontSize: '0.625rem',
+      fontFamily: ['Lato', 'sans-serif']
+    }
+  },
   overrides: {
     MuiPaper: {
       elevation1: {

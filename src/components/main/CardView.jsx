@@ -24,12 +24,16 @@ const styles = theme => ({
 })
 
 class CardView extends React.Component {
-  addCardToList = () => {
-    this.props.closeCardView()
+  addCardToList = data => {
+    this.props.addCard(data)
+  }
+
+  updateCardToList = data => {
+    this.props.updateCard(data)
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, isEdit, progressCardItem } = this.props
     return (
       <Dialog
         open={this.props.open}
@@ -47,22 +51,18 @@ class CardView extends React.Component {
           className={classes.dialogTitle}
           id='alert-dialog-slide-title'
         >
-          {'Add new card'}
+          {isEdit ? 'Update card' : 'Add new card'}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-slide-description'>
-            Add new content
-          </DialogContentText>
-          <CardViewForm />
+          <CardViewForm
+            closeCardView={this.props.closeCardView}
+            onSubmit={this.addCardToList}
+            onSubmit={isEdit ? this.updateCardToList : this.addCardToList}
+            isEdit={isEdit}
+            progressCardItem={progressCardItem}
+          />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.closeCardView} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={this.addCardToList} color='primary'>
-            Add
-          </Button>
-        </DialogActions>
+        <DialogActions />
       </Dialog>
     )
   }
