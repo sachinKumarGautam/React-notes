@@ -24,6 +24,7 @@ const settings = {
     modules: ['node_modules']
   },
   optimization: {
+    minimize: true,
     splitChunks: {
       chunks: 'async',
       minSize: 30000,
