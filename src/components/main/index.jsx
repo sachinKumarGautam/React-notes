@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import SideBar from './SideBar'
 import CardView from './CardView'
 import CardList from './CardList'
+import Snackbar from '../SnackBar'
 
 const styles = theme => ({
   container: {
@@ -20,7 +21,7 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
     whiteSpace: 'nowrap',
     marginBottom: theme.spacing.unit,
-    height: '100vh'
+    height: 'calc(100vh - 150px)'
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
@@ -38,7 +39,9 @@ class Main extends React.Component {
       isEdit: false,
       cardList: [],
       progressCardItem: {},
-      inProgressIndex: null
+      inProgressIndex: null,
+      isSnackBarOpen: false,
+      snackBarEvent: 'add'
     }
   }
 
@@ -67,6 +70,9 @@ class Main extends React.Component {
     this.setState(prevState => ({
       cardList: [...prevState.cardList, newCard]
     }))
+    setTimeout(() => {
+      this.openSnackBar({ action: 'add' })
+    }, 500)
   }
 
   updateCard = value => {
@@ -86,11 +92,13 @@ class Main extends React.Component {
     this.setState({
       cardList: updatedCardList
     })
+    setTimeout(() => {
+      this.openSnackBar({ action: 'update' })
+    }, 500)
   }
 
   deleteCard = (index, event) => {
     event.stopPropagation()
-    console.log(event)
     let updatedCardList = []
     const cardList = this.state.cardList
     updatedCardList = cardList.slice()
@@ -98,6 +106,9 @@ class Main extends React.Component {
     this.setState({
       cardList: updatedCardList
     })
+    setTimeout(() => {
+      this.openSnackBar({ action: 'delete' })
+    }, 500)
   }
 
   editCard = (cardItem, index) => {
@@ -106,6 +117,19 @@ class Main extends React.Component {
       isEdit: true,
       progressCardItem: cardItem,
       inProgressIndex: index
+    })
+  }
+
+  closeSnackBar = () => {
+    this.setState({
+      isSnackBarOpen: false
+    })
+  }
+
+  openSnackBar = ({ action }) => {
+    this.setState({
+      snackBarEvent: action,
+      isSnackBarOpen: true
     })
   }
 
@@ -125,7 +149,7 @@ class Main extends React.Component {
           <Grid item xs={11}>
             <Paper elevation={1} className={classes.paper}>
               {!this.state.cardList.length &&
-                <Typography variant={'display1'} className={classes.noCardYet}>
+                <Typography variant={'headline'} className={classes.noCardYet}>
                   You have not added any card yet!
                 </Typography>}
               <CardList
@@ -143,6 +167,11 @@ class Main extends React.Component {
           isEdit={this.state.isEdit}
           updateCard={this.updateCard}
           progressCardItem={this.state.progressCardItem}
+        />
+        <Snackbar
+          open={this.state.isSnackBarOpen}
+          onClose={this.closeSnackBar}
+          snackBarEvent={this.state.snackBarEvent}
         />
       </div>
     )
